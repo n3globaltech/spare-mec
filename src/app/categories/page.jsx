@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { FiArrowRight } from 'react-icons/fi';
 import { fetchCategories, buildCategoryTree } from '@/lib/catalog';
 import PageHero from '@/components/ui/PageHero';
-import CategoryCard from '@/components/ui/CategoryCard';
 import { getCategoryArt } from '@/config/categoryArt';
 
 export const dynamic = 'force-dynamic';
@@ -14,6 +13,87 @@ export const metadata = {
 };
 
 const isReal = (c) => c.slug && !/test/i.test(c.name || '');
+
+/**
+ * A single category card matching the reference design:
+ * White (or dark) card with category name top-left, tagline below,
+ * product image bottom-right, and a round arrow CTA.
+ */
+function CategoryGridCard({ category, index }) {
+    const art = getCategoryArt(category.slug);
+    const isDark = art.type === 'tall-black';
+    const hasImage = !!art.image;
+
+    return (
+        <Link
+            href={`/category/${category.slug}`}
+            className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${
+                isDark
+                    ? 'border-transparent bg-neutral-950 text-white'
+                    : 'border-neutral-100 bg-white text-neutral-950 hover:border-neutral-200'
+            }`}
+            style={{ minHeight: '300px' }}
+        >
+            {/* Text content */}
+            <div className="relative z-10 max-w-[55%]">
+                <h2 className={`font-display text-xl font-black leading-tight tracking-tight ${isDark ? 'text-white' : 'text-neutral-950'}`}>
+                    {category.name}
+                </h2>
+                {art.tagline && (
+                    <p className={`mt-1.5 text-[13px] leading-snug ${isDark ? 'text-neutral-400' : 'text-neutral-500'}`}>
+                        {art.tagline}
+                    </p>
+                )}
+                {/* Sub-categories as small chips */}
+                {category.children?.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                        {category.children.slice(0, 3).map((ch) => (
+                            <span
+                                key={ch.id}
+                                className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
+                                    isDark ? 'bg-white/10 text-white/70' : 'bg-neutral-100 text-neutral-600'
+                                }`}
+                            >
+                                {ch.name}
+                            </span>
+                        ))}
+                        {category.children.length > 3 && (
+                            <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${isDark ? 'bg-white/10 text-white/70' : 'bg-neutral-100 text-neutral-500'}`}>
+                                +{category.children.length - 3} more
+                            </span>
+                        )}
+                    </div>
+                )}
+            </div>
+
+            {/* Arrow CTA */}
+            <div className="relative z-10 mt-6">
+                <span className={`inline-flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 group-hover:scale-110 ${
+                    isDark ? 'bg-white text-neutral-950' : 'bg-neutral-950 text-white'
+                }`}>
+                    <FiArrowRight size={16} />
+                </span>
+            </div>
+
+            {/* Product image — positioned bottom-right */}
+            {hasImage && (
+                <div className="absolute bottom-0 right-0 h-[96%] w-[68%] pointer-events-none overflow-visible">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src={art.image}
+                        alt={category.name}
+                        className="absolute bottom-0 right-[-8%] h-full w-[128%] object-contain object-bottom transition-transform duration-500 group-hover:scale-105"
+                    />
+                </div>
+            )}
+
+            {/* Subtle gradient overlay for dark cards to blend image into bg */}
+            {isDark && hasImage && (
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-neutral-950 via-neutral-950/70 to-transparent" />
+            )}
+        </Link>
+    );
+}
 
 export default async function CategoriesPage() {
     let categories = [];
@@ -30,47 +110,13 @@ export default async function CategoriesPage() {
                 breadcrumbs={[{ label: 'Home', to: '/' }, { label: 'Categories' }]}
             />
 
-            <section className="bg-[#FAF9F6]/55 pt-6 pb-16 md:py-24 border-t border-neutral-200/30">
+            <section className="bg-[#FAF9F6]/55 pt-6 pb-16 md:py-16 border-t border-neutral-200/30">
                 <div className="container-x lg:max-w-[96rem]">
                     {tree.length > 0 ? (
-                        <div className="space-y-8 lg:space-y-12">
-                            {tree.map((parent, index) => {
-                                const art = getCategoryArt(parent.slug);
-                                const kids = parent.children.filter(isReal);
-                                return (
-                                    <div key={parent.id} className="grid gap-5 lg:gap-8 md:grid-cols-[minmax(0,340px)_1fr] items-start">
-                                        <div className="h-[220px] sm:h-[240px]">
-                                            <CategoryCard category={{ ...parent, ...art }} index={index} isListPage />
-                                        </div>
-                                        {kids.length > 0 ? (
-                                            <div className="flex flex-wrap gap-2.5 content-start md:pt-1">
-                                                {kids.map((ch) => (
-                                                    <Link
-                                                        key={ch.id}
-                                                        href={`/category/${ch.slug}`}
-                                                        className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-4 py-2 text-[13px] font-semibold text-neutral-700 transition-colors hover:border-neutral-900 hover:text-neutral-900"
-                                                    >
-                                                        {ch.name}
-                                                    </Link>
-                                                ))}
-                                                <Link
-                                                    href={`/category/${parent.slug}`}
-                                                    className="inline-flex items-center gap-1 rounded-full bg-neutral-950 px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-neutral-800"
-                                                >
-                                                    All {parent.name} <FiArrowRight size={14} />
-                                                </Link>
-                                            </div>
-                                        ) : (
-                                            <Link
-                                                href={`/category/${parent.slug}`}
-                                                className="inline-flex items-center gap-1.5 text-sm font-bold text-[#EF4444] hover:underline md:pt-1"
-                                            >
-                                                Browse all {parent.name} <FiArrowRight size={15} />
-                                            </Link>
-                                        )}
-                                    </div>
-                                );
-                            })}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+                            {tree.map((parent, index) => (
+                                <CategoryGridCard key={parent.id} category={parent} index={index} />
+                            ))}
                         </div>
                     ) : (
                         <p className="text-center text-neutral-500 py-16">Categories are loading — please check back shortly.</p>

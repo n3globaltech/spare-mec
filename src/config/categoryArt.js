@@ -14,9 +14,13 @@ export const CATEGORY_ART = {
     'cooling-heating': { type: 'tall-white', image: `${IMG}/cooling.png`, tagline: 'Optimal temperature, always' },
     electrical: { type: 'tall-white', image: `${IMG}/electrical.png`, tagline: 'Reliable power & maximum safety' },
     'electrical-lighting': { type: 'tall-white', image: `${IMG}/electrical.png`, tagline: 'Reliable power & maximum safety' },
+    // Fuel & Air — both legacy short slug and full API slug
     'fuel-air': { type: 'tall-white', image: `${IMG}/fuel-air.png`, tagline: 'Clean air & efficient fuel delivery' },
+    'fuel-air-control': { type: 'tall-white', image: `${IMG}/fuel-air.png`, tagline: 'Clean air & efficient fuel delivery' },
+    // Oils & Lubricants — both legacy short slug and full API slug
     lubricants: { type: 'tall-white', image: `${IMG}/oils.png`, tagline: 'Maximum protection & longevity' },
     'oils-lubricants': { type: 'tall-white', image: `${IMG}/oils.png`, tagline: 'Maximum protection & longevity' },
+    'engine-oils-lubricants': { type: 'tall-white', image: `${IMG}/oils.png`, tagline: 'Maximum protection & longevity' },
 };
 
 /** Art + tagline for a slug, with a clean image-less fallback so any category renders. */
