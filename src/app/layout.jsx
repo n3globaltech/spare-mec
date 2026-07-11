@@ -1,5 +1,6 @@
 import './globals.css';
 import { Providers } from './providers';
+import { fetchCategories } from '@/lib/catalog';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { WhatsAppFloat } from '@/components/WhatsAppFloat';
@@ -63,14 +64,19 @@ const websiteJsonLd = {
     },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+    // Fetch categories server-side and seed the navbar, so the Categories dropdown always has data
+    // immediately (no client fetch, no CORS/port dependency, no empty-on-first-open flash).
+    let categories = [];
+    try { categories = await fetchCategories(); } catch { /* API optional at render */ }
+
     return (
         <html lang="en">
             <body>
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
                 <Providers>
-                    <Navbar />
+                    <Navbar categories={categories} />
                     <main className="min-h-screen">{children}</main>
                     <Footer />
                     <MecAssist />

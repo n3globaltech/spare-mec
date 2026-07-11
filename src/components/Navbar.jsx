@@ -19,7 +19,7 @@ const ICON_MAP = { FiHome, FiPackage, FiGrid, FiClock, FiInfo, FiPhone };
 // catalogue filtered). Everything else is a normal route.
 const hrefFor = (link) => (link.label === 'Categories' ? '/#categories' : link.to);
 
-export function Navbar() {
+export function Navbar({ categories }) {
     const pathname = usePathname();
     const router = useRouter();
     const { count } = useCart();
@@ -30,7 +30,7 @@ export function Navbar() {
     const [showMobileSearch, setShowMobileSearch] = useState(false);
     const [mobileCatsOpen, setMobileCatsOpen] = useState(false);
     const headerRef = useRef(null);
-    const { tree: categoryTree } = useCategories();
+    const { tree: categoryTree } = useCategories(categories);
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 16);
@@ -84,7 +84,7 @@ export function Navbar() {
                         <nav className="hidden lg:flex items-center gap-5 xl:gap-6 ml-4 shrink-0">
                             {navLinks.map((link) => (
                                 link.label === 'Categories' ? (
-                                    <CategoryMegaMenu key={link.to} active={isActive('/categories')} />
+                                    <CategoryMegaMenu key={link.to} tree={categoryTree} active={isActive('/categories')} />
                                 ) : (
                                     <div key={link.to} className="h-[72px] flex items-center">
                                         <Link
@@ -183,7 +183,7 @@ export function Navbar() {
                                                         {categoryTree.map((parent) => (
                                                             <div key={parent.id}>
                                                                 <Link
-                                                                    href={`/catalogue?category=${parent.slug}`}
+                                                                    href={`/category/${parent.slug}`}
                                                                     onClick={() => setOpen(false)}
                                                                     className="block rounded-md px-3 py-2 text-sm font-bold text-neutral-800 hover:text-[#EF4444] transition-colors"
                                                                 >
@@ -194,7 +194,7 @@ export function Navbar() {
                                                                         {parent.children.map((child) => (
                                                                             <Link
                                                                                 key={child.id}
-                                                                                href={`/catalogue?category=${child.slug}`}
+                                                                                href={`/category/${child.slug}`}
                                                                                 onClick={() => setOpen(false)}
                                                                                 className="block rounded-md px-3 py-1.5 text-[13px] font-medium text-neutral-500 hover:text-neutral-900 transition-colors"
                                                                             >

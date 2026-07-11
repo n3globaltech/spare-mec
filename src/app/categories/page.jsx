@@ -47,14 +47,14 @@ export default async function CategoriesPage() {
                                                 {kids.map((ch) => (
                                                     <Link
                                                         key={ch.id}
-                                                        href={`/catalogue?category=${ch.slug}`}
+                                                        href={`/category/${ch.slug}`}
                                                         className="inline-flex items-center rounded-full border border-neutral-200 bg-white px-4 py-2 text-[13px] font-semibold text-neutral-700 transition-colors hover:border-neutral-900 hover:text-neutral-900"
                                                     >
                                                         {ch.name}
                                                     </Link>
                                                 ))}
                                                 <Link
-                                                    href={`/catalogue?category=${parent.slug}`}
+                                                    href={`/category/${parent.slug}`}
                                                     className="inline-flex items-center gap-1 rounded-full bg-neutral-950 px-4 py-2 text-[13px] font-bold text-white transition-colors hover:bg-neutral-800"
                                                 >
                                                     All {parent.name} <FiArrowRight size={14} />
@@ -62,7 +62,7 @@ export default async function CategoriesPage() {
                                             </div>
                                         ) : (
                                             <Link
-                                                href={`/catalogue?category=${parent.slug}`}
+                                                href={`/category/${parent.slug}`}
                                                 className="inline-flex items-center gap-1.5 text-sm font-bold text-[#EF4444] hover:underline md:pt-1"
                                             >
                                                 Browse all {parent.name} <FiArrowRight size={15} />

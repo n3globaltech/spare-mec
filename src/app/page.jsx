@@ -1,4 +1,4 @@
-import { fetchAllProducts, fetchCategories, topLevelCategories } from '@/lib/catalog';
+import { fetchAllProducts } from '@/lib/catalog';
 import Hero from '@/components/home/Hero';
 import CategoriesSection from '@/components/home/CategoriesSection';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
@@ -22,13 +22,10 @@ export default async function HomePage() {
     try { featured = (await fetchAllProducts({ featured: 'true', limit: 6 })).products; } catch { /* API optional at render */ }
     if (!featured.length) { try { featured = (await fetchAllProducts({ limit: 6 })).products; } catch { /* ignore */ } }
 
-    let topCategories = [];
-    try { topCategories = topLevelCategories(await fetchCategories()); } catch { /* API optional at render */ }
-
     return (
         <>
             <Hero />
-            <CategoriesSection categories={topCategories} />
+            <CategoriesSection />
             <FeaturedProducts products={featured} />
             <PromoBanners />
             <TrustBar />
