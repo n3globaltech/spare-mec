@@ -68,8 +68,8 @@ export default async function CataloguePage({ searchParams }) {
         <>
             {/* Showroom hero */}
             <div className="container-x pt-6">
-                <div className="relative overflow-hidden rounded-[24px] bg-neutral-950 text-white p-6 pb-8 md:p-10 md:pb-12 min-h-[200px] md:min-h-[250px]">
-                    <div className="absolute right-0 top-0 bottom-0 w-[55%] md:w-[48%] pointer-events-none select-none z-0 overflow-hidden">
+                <div className="relative overflow-visible rounded-[24px] bg-neutral-950 text-white p-6 pb-8 md:p-10 md:pb-12 min-h-[200px] md:min-h-[250px]">
+                    <div className="absolute right-0 top-0 bottom-0 w-[55%] md:w-[48%] pointer-events-none select-none z-0 overflow-hidden rounded-r-[24px]">
                         <div className="absolute inset-0 bg-gradient-to-r from-neutral-950 via-neutral-950/70 to-transparent z-10" />
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src="/assets/sections/featured_car.png" alt="Sports car headlight close-up" className="w-full h-full object-cover object-right opacity-70 z-0 mix-blend-screen" />

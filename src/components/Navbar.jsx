@@ -11,6 +11,7 @@ import { genericWaLink } from '@/lib/whatsapp';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { CategoryMegaMenu } from './CategoryMegaMenu';
+import { AutocompleteSearch } from './AutocompleteSearch';
 import { useCategories } from '@/lib/useCategories';
 
 const ICON_MAP = { FiHome, FiPackage, FiGrid, FiClock, FiInfo, FiPhone };
@@ -42,12 +43,6 @@ export function Navbar({ categories }) {
     // Close menus on navigation.
     useEffect(() => { setOpen(false); setShowMobileSearch(false); }, [pathname]);
 
-    const submitSearch = (e) => {
-        e.preventDefault();
-        const q = e.target.search.value;
-        if (q.trim()) { router.push(`/catalogue?q=${encodeURIComponent(q.trim())}`); setShowMobileSearch(false); }
-    };
-
     const isActive = (to) => (to === '/' ? pathname === '/' : pathname.startsWith(to));
 
     return (
@@ -58,10 +53,13 @@ export function Navbar({ categories }) {
             >
                 {showMobileSearch ? (
                     <div className="container-x lg:max-w-[96rem] flex h-[72px] items-center gap-3 w-full animate-fadeIn">
-                        <form onSubmit={submitSearch} className="relative flex-1">
-                            <FiSearch className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
-                            <input name="search" autoFocus placeholder="Search for parts, brands or products..." className="w-full rounded-full border border-neutral-200/60 bg-[#F3F4F6] py-2.5 pl-9 pr-4 text-xs font-semibold text-neutral-850 outline-none focus:bg-white focus:border-neutral-300 focus:shadow-sm" />
-                        </form>
+                        <AutocompleteSearch
+                            autoFocus
+                            onNavigate={() => setShowMobileSearch(false)}
+                            formClassName="flex-1"
+                            placeholder="Search for parts, brands or products..."
+                            inputClassName="w-full rounded-full border border-neutral-200/60 bg-[#F3F4F6] py-2.5 pl-9 pr-10 text-base font-semibold text-neutral-850 outline-none focus:border-neutral-300 focus:bg-white focus:shadow-sm sm:text-xs"
+                        />
                         <button onClick={() => setShowMobileSearch(false)} className="text-xs font-bold text-neutral-500 hover:text-neutral-900 px-3 py-1.5 rounded-full hover:bg-neutral-100 transition-colors shrink-0">Cancel</button>
                     </div>
                 ) : (
@@ -103,10 +101,11 @@ export function Navbar({ categories }) {
                         </nav>
 
                         {/* Desktop wide search (xl+) */}
-                        <form onSubmit={submitSearch} className="hidden xl:flex relative w-[240px] xl:w-[280px] shrink-0 ml-auto mr-1">
-                            <FiSearch className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
-                            <input name="search" placeholder="Search for parts, brands or products..." className="w-full rounded-full border border-neutral-200/60 bg-[#F3F4F6] py-2.5 pl-9 pr-4 text-xs font-semibold text-neutral-850 placeholder:text-neutral-400 outline-none transition-all duration-300 focus:bg-white focus:border-neutral-300 focus:shadow-sm" />
-                        </form>
+                        <AutocompleteSearch
+                            formClassName="hidden w-[240px] shrink-0 ml-auto mr-1 xl:block xl:w-[280px]"
+                            placeholder="Search for parts, brands or products..."
+                            inputClassName="w-full rounded-full border border-neutral-200/60 bg-[#F3F4F6] py-2.5 pl-9 pr-10 text-xs font-semibold text-neutral-850 placeholder:text-neutral-400 outline-none transition-all duration-300 focus:bg-white focus:border-neutral-300 focus:shadow-sm"
+                        />
 
                         {/* Right: mobile search, cart, wishlist, account, mobile menu */}
                         <div className="flex items-center gap-3 shrink-0 ml-auto xl:ml-0">
