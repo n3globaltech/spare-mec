@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { FiCheck, FiHeart, FiShoppingCart } from 'react-icons/fi';
 import { useProductCard } from '@/hooks/useProductCard';
 import { ProductCardBadges } from './ProductCardBadges';
+import { ProductPartNumber } from './ProductPartNumber';
 import StarRating from './ui/StarRating';
 
 // Client card — ported 1:1 from the CRA storefront (wishlist heart, star rating, add-to-cart,
@@ -56,9 +57,7 @@ export function LargeProductCard({ product, index = 0, forceCol = false }) {
                     <div className="flex justify-between items-start w-full mt-1 gap-2">
                         <div className="min-w-0 flex-1">
                             <h3 className="text-[13px] font-bold leading-snug text-neutral-900 line-clamp-2 h-[36px]">{product.name}</h3>
-                            {product.partNumber && (
-                                <p className="mt-1 w-fit max-w-full truncate rounded-md bg-neutral-100 px-1.5 py-0.5 font-mono text-[11px] font-bold leading-tight text-neutral-600 ring-1 ring-inset ring-neutral-200/70">Part No: {product.partNumber}</p>
-                            )}
+                            <ProductPartNumber value={product.partNumber} className="mt-1 text-[13px]" />
                         </div>
                         <div className="flex flex-col items-end shrink-0 text-right -mt-0.5 min-w-[72px]">
                             {priceLabel ? (
@@ -85,9 +84,7 @@ export function LargeProductCard({ product, index = 0, forceCol = false }) {
                 <div className={`${forceCol ? 'flex animate-fadeIn' : 'hidden md:flex'} flex-1 flex-col p-4 md:p-4.5 relative`}>
                     <span className="text-[9px] md:text-[10px] font-bold text-neutral-500 uppercase tracking-widest block mb-1">{product.categoryName}</span>
                     <h3 className="mt-1.5 md:mt-2 text-xs md:text-sm font-bold leading-snug text-neutral-800 transition-colors duration-300 group-hover:text-neutral-950 line-clamp-2 pr-6 h-[32px] md:h-[40px]">{product.name}</h3>
-                    {product.partNumber && (
-                        <p className="mt-1 w-fit max-w-full truncate rounded-md bg-neutral-100 px-1.5 py-0.5 font-mono text-[11px] font-bold leading-tight text-neutral-600 ring-1 ring-inset ring-neutral-200/70 md:text-[12px]">Part No: {product.partNumber}</p>
-                    )}
+                    <ProductPartNumber value={product.partNumber} className="mt-1 text-xs md:text-sm" />
                     <div className={`${product.partNumber ? 'mt-1' : 'mt-1.5 md:mt-2'} min-h-[17px]`}>
                         {hasRating && (
                             <StarRating rating={rating} size={12} starClassName="text-amber-400" count={reviewCount} countClassName="text-[11px] text-neutral-500 font-semibold" />

@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { FiCheck, FiHeart, FiShoppingCart } from 'react-icons/fi';
 import { useProductCard } from '@/hooks/useProductCard';
 import { ProductCardBadges } from './ProductCardBadges';
+import { ProductPartNumber } from './ProductPartNumber';
 
 export function CompactProductCard({ product, index = 0 }) {
     const reduce = useReducedMotion();
@@ -42,9 +43,7 @@ export function CompactProductCard({ product, index = 0 }) {
                     <h3 className="mt-1.5 line-clamp-2 min-h-[34px] text-[12px] font-bold leading-[1.4] text-neutral-900 sm:text-[13px] md:min-h-[40px] md:text-sm">
                         {product.name}
                     </h3>
-                    {product.partNumber && (
-                        <p className="mt-1 w-fit max-w-full truncate rounded-md bg-neutral-100 px-1.5 py-0.5 font-mono text-[11px] font-bold leading-tight text-neutral-600 ring-1 ring-inset ring-neutral-200/70 md:text-[12px]">Part No: {product.partNumber}</p>
-                    )}
+                    <ProductPartNumber value={product.partNumber} className="mt-1 text-[12px] sm:text-[13px] md:text-sm" />
 
                     <div className="mt-auto min-h-[38px] pr-10 pt-2.5 sm:pr-11">
                         {priceLabel ? (
