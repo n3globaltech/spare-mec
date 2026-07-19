@@ -4,6 +4,7 @@ import { formatMoney } from '@/lib/money';
 import { ProductActions } from '@/components/ProductActions';
 import { ResponsiveProductGrid } from '@/components/ProductGrid';
 import { ProductGallery } from '@/components/ProductGallery';
+import { ProductRatingPanel } from '@/components/ProductRatingPanel';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import AvailabilityBadge from '@/components/ui/AvailabilityBadge';
 
@@ -61,6 +62,15 @@ export default async function ProductPage({ params }) {
         brand: product.brand ? { '@type': 'Brand', name: product.brand } : undefined,
         description: product.shortDescription || product.description || undefined,
         image: product.images?.length ? product.images : (product.image ? [product.image] : undefined),
+        aggregateRating: product.rating != null && product.reviewCount > 0
+            ? {
+                '@type': 'AggregateRating',
+                ratingValue: product.rating,
+                ratingCount: product.reviewCount,
+                bestRating: 5,
+                worstRating: 1,
+            }
+            : undefined,
         offers: showPrice
             ? {
                 '@type': 'Offer',
@@ -115,6 +125,7 @@ export default async function ProductPage({ params }) {
                     <div className="mt-2">
                         <AvailabilityBadge availability={product.inStock ? 'In Stock' : 'Made to Order'} />
                     </div>
+                    <ProductRatingPanel product={product} />
                     {product.shortDescription && <p className="mt-4 text-neutral-600">{product.shortDescription}</p>}
 
                     <ProductActions product={product} />

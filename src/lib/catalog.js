@@ -35,6 +35,9 @@ export function mapProduct(dto) {
         featured: !!dto.isFeatured,
         trending: !!dto.isTrending,
         customerFavorite: !!dto.isCustomerFavorite,
+        rating: dto.rating ?? null,
+        reviewCount: Number(dto.reviewCount) || 0,
+        ratingSource: dto.ratingSource || null,
         badges: Array.isArray(dto.badges) ? dto.badges : [],
         shortDescription: dto.shortDescription,
         description: dto.description,
@@ -85,6 +88,11 @@ export async function fetchRelated(slug) {
 export async function searchProducts(q, params = {}) {
     const { data } = await publicApi.get("/catalog/products", { params: { q, limit: 60, ...params } });
     return (data.products || []).map(mapProduct);
+}
+
+export async function submitProductRating(slug, payload) {
+    const { data } = await publicApi.post(`/catalog/products/${encodeURIComponent(slug)}/ratings`, payload);
+    return data.data;
 }
 
 export async function fetchCategories() {

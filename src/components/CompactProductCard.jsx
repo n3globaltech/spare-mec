@@ -6,10 +6,13 @@ import { FiCheck, FiHeart, FiShoppingCart } from 'react-icons/fi';
 import { useProductCard } from '@/hooks/useProductCard';
 import { ProductCardBadges } from './ProductCardBadges';
 import { ProductPartNumber } from './ProductPartNumber';
+import { ProductRatingBadge } from './ProductRatingBadge';
 
 export function CompactProductCard({ product, index = 0 }) {
     const reduce = useReducedMotion();
     const { added, badges, compareAtLabel, handleAdd, handleWishlist, href, image, isWished, priceLabel } = useProductCard(product);
+    const rating = product.rating != null ? Number(product.rating) : null;
+    const reviewCount = Number(product.reviewCount) || 0;
 
     return (
         <motion.article
@@ -18,9 +21,10 @@ export function CompactProductCard({ product, index = 0 }) {
             transition={{ duration: 0.45, delay: (index % 4) * 0.05, ease: [0.22, 1, 0.36, 1] }}
             className="group relative flex min-w-0 flex-col overflow-hidden rounded-[20px] border border-neutral-200/80 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-neutral-300 hover:shadow-[0_16px_36px_-12px_rgba(10,10,10,0.08)] md:rounded-[24px]"
         >
-            <Link href={href} className="flex min-w-0 flex-1 flex-col">
-                <div className="relative aspect-square w-full overflow-hidden bg-neutral-50/65">
-                    <div className="absolute inset-0 bg-grid-light bg-[size:20px_20px] opacity-25" />
+            <Link href={href} aria-label={`View ${product.name}`} className="absolute inset-0 z-10 rounded-[20px] outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 md:rounded-[24px]" />
+            <div className="flex min-w-0 flex-1 flex-col">
+                <div className="relative aspect-square w-full overflow-hidden bg-neutral-50/65 md:aspect-[5/4]">
+                    <div className="absolute inset-0 bg-grid-light bg-[size:20px_20px] opacity-25 md:hidden" />
                     <ProductCardBadges badges={badges} compact />
                     {image ? (
                         // eslint-disable-next-line @next/next/no-img-element
@@ -29,14 +33,14 @@ export function CompactProductCard({ product, index = 0 }) {
                             alt={product.name}
                             loading="lazy"
                             decoding="async"
-                            className="relative h-full w-full object-contain p-2.5 transition-transform duration-700 ease-out group-hover:scale-105 sm:p-3 md:p-4"
+                            className="relative h-full w-full object-contain p-2.5 transition-transform duration-700 ease-out group-hover:scale-105 sm:p-3 md:p-0"
                         />
                     ) : (
                         <div className="relative grid h-full w-full place-items-center text-[10px] text-neutral-300">No image</div>
                     )}
                 </div>
 
-                <div className="flex flex-1 flex-col p-3 pb-3.5 sm:p-3.5 md:p-4">
+                <div className="flex flex-1 flex-col p-3 pb-3.5 sm:p-3.5 md:p-3.5">
                     <span className="truncate text-[8px] font-extrabold uppercase tracking-[0.14em] text-neutral-500 sm:text-[9px]">
                         {product.categoryName}
                     </span>
@@ -44,8 +48,9 @@ export function CompactProductCard({ product, index = 0 }) {
                     <h3 className="mt-1.5 line-clamp-2 min-h-[34px] text-[12px] font-bold leading-[1.4] text-neutral-900 sm:text-[13px] md:min-h-[40px] md:text-sm">
                         {product.name}
                     </h3>
+                    <ProductRatingBadge rating={rating} reviewCount={reviewCount} ratingSource={product.ratingSource} compact className="mt-1.5" />
 
-                    <div className="mt-auto min-h-[38px] pr-10 pt-2.5 sm:pr-11">
+                    <div className="mt-auto min-h-[38px] pr-10 pt-2.5 sm:pr-11 md:min-h-[34px] md:pt-2">
                         {priceLabel ? (
                             <div className="flex flex-col">
                                 {compareAtLabel && <span className="text-[9px] leading-none text-neutral-400 line-through sm:text-[10px]">{compareAtLabel}</span>}
@@ -56,7 +61,7 @@ export function CompactProductCard({ product, index = 0 }) {
                         )}
                     </div>
                 </div>
-            </Link>
+            </div>
 
             <button
                 type="button"

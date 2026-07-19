@@ -6,17 +6,16 @@ import { FiCheck, FiHeart, FiShoppingCart } from 'react-icons/fi';
 import { useProductCard } from '@/hooks/useProductCard';
 import { ProductCardBadges } from './ProductCardBadges';
 import { ProductPartNumber } from './ProductPartNumber';
-import StarRating from './ui/StarRating';
+import { ProductRatingBadge } from './ProductRatingBadge';
 
 // Client card — ported 1:1 from the CRA storefront (wishlist heart, star rating, add-to-cart,
 // mobile-row / desktop-column / forceCol layouts). Still SSR'd to crawlable HTML by Next.
 export function LargeProductCard({ product, index = 0, forceCol = false }) {
     const reduce = useReducedMotion();
     const { added, badges, compareAtLabel, handleAdd, handleWishlist, href, image, isWished, priceLabel } = useProductCard(product);
-    // Only render a rating when the product actually has real review data — no fabricated stars.
+    // The score may be verified offline feedback or the live customer average; the count is always real online submissions.
     const rating = product.rating ?? null;
-    const reviewCount = product.reviewCount ?? null;
-    const hasRating = rating != null;
+    const reviewCount = Number(product.reviewCount) > 0 ? Number(product.reviewCount) : null;
 
     return (
         <motion.article
@@ -58,6 +57,7 @@ export function LargeProductCard({ product, index = 0, forceCol = false }) {
                         <div className="min-w-0 flex-1">
                             <ProductPartNumber value={product.partNumber} className="mb-1.5" valueClassName="text-[15px]" />
                             <h3 className="text-[13px] font-bold leading-snug text-neutral-900 line-clamp-2 h-[36px]">{product.name}</h3>
+                            <ProductRatingBadge rating={rating} reviewCount={reviewCount} ratingSource={product.ratingSource} compact className="mt-1" />
                         </div>
                         <div className="flex flex-col items-end shrink-0 text-right -mt-0.5 min-w-[72px]">
                             {priceLabel ? (
@@ -71,8 +71,7 @@ export function LargeProductCard({ product, index = 0, forceCol = false }) {
                         </div>
                     </div>
 
-                    <div className="flex justify-between items-end w-full mt-2">
-                        {hasRating ? <StarRating rating={rating} size={9} starClassName="text-amber-400" count={reviewCount} countClassName="text-[9px] text-neutral-500 font-semibold" /> : <span />}
+                    <div className="flex justify-end items-end w-full mt-1.5">
                         <button onClick={handleAdd} className={`relative z-20 px-3 py-1.5 -mr-3 rounded-lg border text-[10px] font-bold flex items-center gap-1.5 transition-all duration-300 shadow-sm ${added ? 'border-neutral-950 bg-neutral-950 text-white' : 'border-neutral-200 bg-neutral-50 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 hover:border-neutral-300'}`}>
                             <span>{added ? 'Added' : 'Add to Cart'}</span>
                             {added ? <FiCheck size={11} /> : <FiShoppingCart size={11} />}
@@ -86,9 +85,7 @@ export function LargeProductCard({ product, index = 0, forceCol = false }) {
                     <ProductPartNumber value={product.partNumber} className="mt-1" valueClassName="text-[15px]" desktopProminent />
                     <h3 className={`${product.partNumber ? 'mt-1.5' : 'mt-1.5 md:mt-2'} text-xs md:text-sm font-bold leading-snug text-neutral-800 transition-colors duration-300 group-hover:text-neutral-950 line-clamp-2 pr-6 h-[32px] md:h-[40px]`}>{product.name}</h3>
                     <div className={`${product.partNumber ? 'mt-1' : 'mt-1.5 md:mt-2'} min-h-[17px]`}>
-                        {hasRating && (
-                            <StarRating rating={rating} size={12} starClassName="text-amber-400" count={reviewCount} countClassName="text-[11px] text-neutral-500 font-semibold" />
-                        )}
+                        <ProductRatingBadge rating={rating} reviewCount={reviewCount} ratingSource={product.ratingSource} compact />
                     </div>
                     <div className="mt-auto pt-2 md:pt-2.5">
                         {priceLabel ? (
